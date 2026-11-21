@@ -1,6 +1,6 @@
 # Boğa Koşusu — TikTok LIVE oyunu (3B)
 
-İzleyicilerin yorum yazarak katıldığı, 3B bir canlı yayın yarışı. Köy yolunda bloklu koşucular kameraya doğru kaçar, arkalarından bir boğa gelir. Geride kalanı boğa yakalayıp havaya savurur; 400 metrelik bitişe ilk varan kazanır.
+İzleyicilerin yorum yazarak katıldığı, 3B bir canlı yayın yarışı. Köy yolunda bloklu koşucular kameraya doğru kaçar, arkalarından bir boğa gelir. Geride kalanı boğa yakalayıp havaya savurur; 700 metrelik bitişe ilk varan kazanır. Bir yarış yaklaşık 2 dakika sürer; izleyicilerin beğeni ve hediye göndermesi için bolca zaman kalır.
 
 Oyun tur tur döner: **lobi → 3-2-1 → yarış → sonuç kartı → yeni lobi.**
 

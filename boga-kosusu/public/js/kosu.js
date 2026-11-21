@@ -6,8 +6,8 @@ import { createWorld } from './dunya3d.js';
 
 const C = { red: '#D7263D', redDark: '#9E1B2C', yellow: '#FFD23F', orange: '#F28C28', cream: '#FFF6E5', ink: '#1E1410' };
 const TITLE_FONT = 'Bungee, Rubik, sans-serif';
-const LENGTH = 400;            // yarış mesafesi (m)
-const LOBBY = 25, COUNT = 3, RESULTS = 9, CAP = 24, MIN_RUNNERS = 6;
+const LENGTH = 700;            // yarış mesafesi (m): ~2 dakikalık yarış, izleyiciye hediye/beğeni için zaman
+const LOBBY = 30, COUNT = 3, RESULTS = 10, CAP = 24, MIN_RUNNERS = 6;
 
 // Yorum komutları (büyük/küçük harf ve Türkçe karakter fark etmez: "KOŞ", "koşşş", "Hızlan" hepsi çalışır)
 const W_RUN = ['koş', 'koşun', 'koştur', 'hızlan', 'hızlı', 'kaç', 'kaçın', 'hadi', 'haydi', 'gaz', 'bas'];
@@ -222,6 +222,8 @@ export function createKosu(api) {
     results = { list, winner, caughtCount: caught.length, no: raceNo };
     raceNo++; saveNum('kosu-yaris-no', raceNo);
     phase = 'results'; phaseT = RESULTS;
+    // sonuç kartı açılırken eski duyurular kartın üstüne binmesin
+    api.banners.q.length = 0; api.banners.cur = null;
     if (winner) { api.particles.confetti(W / 2, 700, 160, CONFETTI); api.sfx('cheer', true); }
   }
 
@@ -263,7 +265,8 @@ export function createKosu(api) {
     raceT += dt;
     const running = [...runners.values()].filter((r) => r.state === 'run');
     // boğa: başta kısa bir avans, sonra giderek hızlanır
-    let bv = raceT < 2.5 ? 0 : Math.min(8.2, 5.6 + (raceT - 2.5) * 0.02);
+    // uzun yarış için boğa daha yavaş hızlanır (simülasyonla dengelendi: etkileşimsiz de 3-4 kişi bitirir)
+    let bv = raceT < 2.5 ? 0 : Math.min(7.0, 5.5 + (raceT - 2.5) * 0.009);
     // boğa sondakinden çok geride kalırsa atak yapar: her zaman sondakilerin peşinde
     const tail = running.length ? Math.min(...running.map((r) => r.d)) : bull.d;
     if (raceT > 2.5 && tail - bull.d > 16) bv += Math.min(2.5, (tail - bull.d - 16) * 0.25);
@@ -305,7 +308,7 @@ export function createKosu(api) {
     for (const r of runners.values()) if (r.state === 'done') { r.d += r.base * dt; r.mover.update(dt * 2.4, dt); }
 
     const active = [...runners.values()].filter((r) => r.state === 'run').length;
-    if (!active || (firstFinishT !== null && raceT - firstFinishT > 12) || raceT > 160) endRace();
+    if (!active || (firstFinishT !== null && raceT - firstFinishT > 12) || raceT > 240) endRace();
   }
 
   function toss(r) {

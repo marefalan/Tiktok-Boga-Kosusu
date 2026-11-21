@@ -64,10 +64,10 @@ Mac'te ekran yakalama için ilk seferde izin istenir: **Sistem Ayarları → Giz
 
 ## Oyun nasıl oynanır?
 
-Oyun turlar halinde döner: **lobi (25 sn) → 3-2-1 → yarış → sonuç kartı (9 sn) → yeni lobi.** Bir tur yaklaşık 1,5-2 dakika sürer.
+Oyun turlar halinde döner: **lobi (30 sn) → 3-2-1 → yarış (~2 dk) → sonuç kartı (10 sn) → yeni lobi.** Bir tur yaklaşık 2,5-3 dakika sürer. Yarış bilerek uzun tutuldu: izleyiciler yarış boyunca beğeni ve hediye göndererek koşucularını öne taşıyabilir.
 
 - **Lobi:** Yorum yazan izleyici yarışa katılır. Az kişi varsa boş yerleri isimsiz koşucular doldurur.
-- **Yarış:** Koşucular 400 metrelik köy yolunda kameraya doğru koşar, boğa arkalarından gelir. Boğa zamanla hızlanır ve sondakilerden çok geride kalırsa atak yapar. Yakalanan koşucu havaya savrulur ve yarıştan çıkar.
+- **Yarış:** Koşucular 700 metrelik köy yolunda kameraya doğru koşar, boğa arkalarından gelir. Boğa zamanla hızlanır ve sondakilerden çok geride kalırsa atak yapar. Yakalanan koşucu havaya savrulur ve yarıştan çıkar.
 - **Bitiş:** İlk varan kazanır. İlk koşucu bitişe ulaştıktan 12 saniye sonra ya da herkes bitirince veya yakalanınca yarış biter.
 - **Sonuç kartı:** Kazananın süresi, toplam galibiyet sayısı ve ilk 5 gösterilir. Kimse bitiremezse "Boğa kazandı" yazar. Galibiyetler saklanır; panelden **Galibiyetleri sıfırla** ile silebilirsin.
 - **Sonraki tur:** Yarış sürerken yorum yazan izleyici sonraki yarışa otomatik yazılır.
