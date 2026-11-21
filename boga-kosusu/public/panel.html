@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kontrol paneli · Boğa Koşusu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2F7; --card: #FFFFFF; --ink: #1F1830; --muted: #6A6180; --line: #E2DDEB;
+    --accent: #D7263D; --accent-ink: #FFFFFF; --ok: #1E9E62; --warn: #C27A00; --err: #D23B3B;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15111F; --card: #1F1A2C; --ink: #F1EDF8; --muted: #A79FBA; --line: #332B45; --accent: #F2A65A; --accent-ink: #2A160C; --ok: #3FD08A; --warn: #F2B04A; --err: #FF6B6B; color-scheme: dark; }
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 Rubik, system-ui, sans-serif; }
+  .wrap { display: grid; grid-template-columns: minmax(0, 560px) auto; gap: 28px; padding: 28px; max-width: 1180px; margin: 0 auto; align-items: start; }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; padding: 16px; } .preview { order: -1; } }
+  h1 { font: 400 30px/1.1 Bungee, Rubik, sans-serif; margin: 0 0 4px; letter-spacing: .5px; }
+  .lead { color: var(--muted); margin: 0 0 22px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+  h2 { font-size: 17px; font-weight: 600; margin: 0 0 12px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  input[type=text] { flex: 1; min-width: 140px; font: inherit; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  button, .btn { font: 500 14px Rubik, system-ui, sans-serif; padding: 9px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  button:hover, .btn:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .status { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); margin-top: 5px; flex: none; }
+  .dot.live { background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 25%, transparent); }
+  .dot.waiting, .dot.connecting { background: var(--warn); }
+  .dot.error { background: var(--err); }
+  .note { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--warn) 14%, transparent); color: var(--ink); font-size: 14px; }
+  .note[hidden] { display: none; }
+  label.tempo { display: flex; gap: 12px; align-items: center; margin: 4px 0 12px; }
+  label.tempo input { flex: 1; accent-color: var(--accent); }
+  .gifts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+  .gifts button { justify-content: flex-start; text-align: left; }
+  .gifts small { color: var(--muted); display: block; font-size: 12px; }
+  .sub { color: var(--muted); font-size: 13px; margin: 12px 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; }
+  td code { font-size: 12px; }
+  .empty { color: var(--muted); font-size: 14px; }
+  .log { max-height: 260px; overflow: auto; }
+  .preview { position: sticky; top: 20px; }
+  .preview iframe { display: block; height: min(82vh, 860px); aspect-ratio: 9 / 16; border: 0; border-radius: 18px; background: #000; box-shadow: 0 10px 40px rgba(0,0,0,.25); }
+  .preview p { color: var(--muted); font-size: 13px; text-align: center; margin: 10px 0 0; max-width: 46ch; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main>
+    <h1>Boğa Koşusu</h1>
+    <p class="lead">Bu sayfa senin kontrol panelin. Yayına sağdaki önizlemeyi değil, ayrı açılan sahne penceresini ver.</p>
+
+    <section aria-labelledby="h-baglanti">
+      <h2 id="h-baglanti">Yayın bağlantısı</h2>
+      <div class="status"><span class="dot" id="dot"></span><span id="durum">Sunucuya bağlanılıyor…</span></div>
+      <div class="row">
+        <input type="text" id="kullanici" placeholder="TikTok kullanıcı adı (@ olmadan)" autocomplete="off" aria-label="TikTok kullanıcı adı">
+        <button class="primary" id="baglan">Bağlan</button>
+        <button id="kes">Bağlantıyı kes</button>
+      </div>
+      <p class="note" id="anahtarYok" hidden>Euler API anahtarı girilmemiş. <code>ayarlar.json</code> dosyasındaki <code>signApiKey</code> alanına anahtarını yaz, kaydet ve oyunu yeniden başlat.</p>
+    </section>
+
+    <section aria-labelledby="h-sahne">
+      <h2 id="h-sahne">Sahne</h2>
+      <label class="tempo" id="tempoAlan">Tempo <input type="range" id="tempo" min="90" max="150" value="124"> <span id="tempoDeger">124 BPM</span></label>
+      <div class="row">
+        <button data-cmd="muzik-sonraki">Sonraki şarkı</button>
+        <button data-cmd="temizle">Yarışı sıfırla</button>
+        <button data-cmd="skor-sifirla" id="skorSifirla">Galibiyetleri sıfırla</button>
+        <a class="btn" href="/sahne" target="_blank" rel="noopener">Sahneyi yeni sekmede aç</a>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-deneme">
+      <h2 id="h-deneme">Yayın açmadan dene</h2>
+      <div class="row">
+        <button data-demo="chat">Biri yorum yazsın</button>
+        <button data-demo="crowd">5 kişi gelsin</button>
+        <button data-demo="like">Beğeni yağsın</button>
+        <button data-demo="follow">Takip</button>
+        <button data-demo="share">Paylaşım</button>
+      </div>
+      <p class="sub">Hediye at (hediyeler.json'daki kurallar)</p>
+      <div class="gifts" id="hediyeDugmeleri"></div>
+      <p class="sub">Kendi yorumunu dene</p>
+      <div class="row">
+        <input type="text" id="demoAd" placeholder="Takma ad" style="max-width:160px" aria-label="Takma ad">
+        <input type="text" id="demoYorum" placeholder="Yorum, örneğin: koş" aria-label="Yorum">
+        <button id="demoGonder">Gönder</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-kayit">
+      <h2 id="h-kayit">Hediye kaydı</h2>
+      <p class="sub" style="margin-top:0">Gelen hediyelerin adı ve numarası burada görünür. Bunları <code>hediyeler.json</code>'daki <code>ad</code> ve <code>id</code> alanlarına yazabilirsin.</p>
+      <div class="log">
+        <table>
+          <thead><tr><th>Saat</th><th>Kim</th><th>Hediye</th><th>ID</th><th>Jeton</th><th>Eylem</th></tr></thead>
+          <tbody id="kayit"><tr><td colspan="6" class="empty">Henüz hediye gelmedi.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="row" style="margin-top:12px"><button id="yenidenOku">Hediyeleri yeniden oku</button><span id="okumaSonuc" class="sub" style="margin:0"></span></div>
+    </section>
+  </main>
+
+  <aside class="preview" aria-label="Önizleme">
+    <iframe src="/sahne?sessiz&kalite=0.4" title="Sahne önizlemesi"></iframe>
+    <p>Önizleme sessizdir. Müzik, ayrı açılan sahne penceresinde çalar.</p>
+  </aside>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const post = (url, body) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then((r) => r.json()).catch(() => ({}));
+let rules = [];
+
+const NICKS = ['deniz.k', 'mert_42', 'zeynep.k', 'can.b', 'elif.b', 'kaan.run', 'ece.m', 'burak7', 'selin.art', 'emre_tr', 'ada.lin', 'onur.fx', 'irem.s', 'tolga.b', 'nil.su'];
+const CHATS = ['katıl', 'selam', 'koş', 'HIZLAN', 'hadiii', 'KOŞŞŞ', 'Kaç', 'yaşasın'];
+const rnd = (a) => a[Math.floor(Math.random() * a.length)];
+
+function renderGifts() {
+  const box = $('#hediyeDugmeleri');
+  box.innerHTML = '';
+  (rules || []).forEach((r) => {
+    const b = document.createElement('button');
+    b.innerHTML = `<span aria-hidden="true">${r.ikon || '🎁'}</span><span>${esc(r.etiket || r.eylem)}<small>${r.jeton} jeton</small></span>`;
+    b.onclick = () => post('/api/demo', { type: 'gift', nick: rnd(NICKS), rule: r });
+    box.appendChild(b);
+  });
+  if (!box.children.length) box.innerHTML = '<span class="empty">hediyeler.json okunamadı.</span>';
+}
+
+function setStatus(s) {
+  $('#dot').className = 'dot ' + (s.state || '');
+  $('#durum').textContent = s.message || '';
+}
+
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function logGift(ev) {
+  const tb = $('#kayit');
+  if (tb.querySelector('.empty')) tb.innerHTML = '';
+  const tr = document.createElement('tr');
+  const time = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  tr.innerHTML = `<td>${time}</td><td>${esc(ev.user.nick)}</td><td>${esc(ev.gift.icon)} ${esc(ev.gift.name)}${ev.gift.count > 1 ? ' ×' + ev.gift.count : ''}</td><td><code>${esc(ev.gift.id || '-')}</code></td><td>${ev.gift.diamonds}</td><td>${esc(ev.label || ev.action)}</td>`;
+  tb.prepend(tr);
+  while (tb.children.length > 60) tb.lastChild.remove();
+}
+
+function listen() {
+  const es = new EventSource('/api/events');
+  es.onmessage = (m) => {
+    const ev = JSON.parse(m.data);
+    if (ev.type === 'hello') {
+      rules = ev.rules; renderGifts(); setStatus(ev.status);
+      if (ev.username && !$('#kullanici').value) $('#kullanici').value = ev.username;
+      $('#anahtarYok').hidden = ev.hasKey;
+    } else if (ev.type === 'status') setStatus(ev.status);
+    else if (ev.type === 'rules') { rules = ev.rules; renderGifts(); }
+    else if (ev.type === 'gift') logGift(ev);
+  };
+  es.onerror = () => { setStatus({ state: 'error', message: 'Sunucuya ulaşılamıyor. SUNUCU penceresi açık mı?' }); es.close(); setTimeout(listen, 2000); };
+}
+
+$('#baglan').onclick = () => post('/api/connect', { username: $('#kullanici').value });
+$('#kullanici').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#baglan').click(); });
+$('#kes').onclick = () => post('/api/disconnect');
+document.querySelectorAll('[data-cmd]').forEach((b) => b.onclick = () => {
+  if (b.dataset.cmd === 'skor-sifirla' && !confirm('Galibiyetler ve yarış numarası silinsin mi?')) return;
+  post('/api/control', { cmd: b.dataset.cmd });
+});
+$('#tempo').oninput = (e) => { $('#tempoDeger').textContent = e.target.value + ' BPM'; post('/api/control', { cmd: 'bpm:' + e.target.value }); };
+document.querySelectorAll('[data-demo]').forEach((b) => b.onclick = () => {
+  const k = b.dataset.demo;
+  if (k === 'chat') post('/api/demo', { type: 'chat', nick: rnd(NICKS), text: rnd(CHATS) });
+  else if (k === 'crowd') NICKS.slice().sort(() => Math.random() - 0.5).slice(0, 5).forEach((n, i) => setTimeout(() => post('/api/demo', { type: 'chat', nick: n, text: 'selam' }), i * 250));
+  else if (k === 'like') post('/api/demo', { type: 'like', nick: rnd(NICKS), count: 40 });
+  else post('/api/demo', { type: k, nick: rnd(NICKS) });
+});
+$('#demoGonder').onclick = () => {
+  const text = $('#demoYorum').value.trim(); if (!text) return;
+  post('/api/demo', { type: 'chat', nick: $('#demoAd').value.trim() || rnd(NICKS), text });
+  $('#demoYorum').value = '';
+};
+$('#demoYorum').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#demoGonder').click(); });
+$('#yenidenOku').onclick = async () => {
+  const r = await post('/api/reload-gifts');
+  $('#okumaSonuc').textContent = r.ok ? 'Hediyeler güncellendi.' : 'hediyeler.json okunamadı. Tırnak veya virgül eksik olabilir.';
+};
+listen();
+</script>
+</body>
+</html>

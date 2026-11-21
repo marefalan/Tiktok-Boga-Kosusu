@@ -1,0 +1,15 @@
+{
+  "name": "boga-kosusu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TikTok LIVE için etkileşimli boğa koşusu yarışı",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "tiktok-live-connector": "^2.5.0"
+  }
+}

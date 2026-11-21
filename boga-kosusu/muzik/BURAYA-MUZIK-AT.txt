@@ -1,0 +1,3 @@
+Bu klasöre kendi müziklerini at (mp3, m4a, wav, ogg, flac).
+Hepsi sırayla, tekrar tekrar çalar.
+Hiç müzik yoksa oyun kendi ritmini üretir.

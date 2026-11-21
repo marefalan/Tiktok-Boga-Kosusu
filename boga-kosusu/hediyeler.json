@@ -1,0 +1,19 @@
+{
+  "_aciklama": [
+    "TikTok LIVE Studio 'İzleyici Dilekleri' listesine koyduğun hediyeler ve yarışta ne yapacakları.",
+    "eylem: katil | turbo | kalkan | jetpack | pelerin | roket (eylem adlarını değiştirme)",
+    "Yarış sürerken atılan hediye hemen işler; lobide atılan hediye yarış başlarken işler.",
+    "etiket ve ikon: kontrol panelinde ve duyurularda görünen ad ve emoji. jeton: hediyenin jeton değeri (ekranda gösterilmez, sadece eşleştirme için).",
+    "ad / id: hediyenin TikTok'taki adı ve numarası. Kontrol panelindeki 'Hediye kaydı'ndan bakıp yazabilirsin.",
+    "ad ve id boşsa hediye sadece jeton değerine göre eşleşir. Listede olmayan hediyeler turbo olur.",
+    "Dosyayı kaydedip kontrol panelinde 'Hediyeleri yeniden oku'ya basman yeterli."
+  ],
+  "kurallar": [
+    { "eylem": "katil",   "etiket": "Yarışa Katıl",   "jeton": 1,   "ikon": "🌹", "ad": ["Rose", "Gül"], "id": ["5655"] },
+    { "eylem": "turbo",   "etiket": "Turbo",          "jeton": 5,   "ikon": "⚡", "ad": [], "id": [] },
+    { "eylem": "kalkan",  "etiket": "Kalkan",         "jeton": 20,  "ikon": "🛡️", "ad": [], "id": [] },
+    { "eylem": "jetpack", "etiket": "Jetpack",        "jeton": 30,  "ikon": "🎒", "ad": [], "id": [] },
+    { "eylem": "pelerin", "etiket": "Kırmızı Pelerin","jeton": 99,  "ikon": "🧣", "ad": [], "id": [] },
+    { "eylem": "roket",   "etiket": "Roket: En Öne",  "jeton": 199, "ikon": "🚀", "ad": [], "id": [] }
+  ]
+}
